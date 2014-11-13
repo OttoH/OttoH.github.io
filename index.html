@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>just a game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <!-- css -->
+    <link rel="stylesheet" href="/bower_components/pure/base-min.css">
+    <script src="bower_components/shake.js/shake.js"></script>
+    <script src="js/two.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <style>
+        body {
+            background: #39197F;
+            }
+        .showText {
+            width: 80%;
+            margin: 26px 12px;
+        }
+
+        #time_ {
+            color: #c5c5c5;
+            margin: 0px;
+        }
+
+        #result_ {
+            font-size: 2.8em;
+            color: #FCFCFC;
+            margin: 0px;
+        }
+    </style>
+</head>
+<body>
+<div class="showText">
+    <h1 id="time_">shake!!!</h1>
+    <h1 id="result_"></h1>
+    <h3 id="console_"></h3>
+</div>
+<div id="game">
+    <script>
+        $(function(){
+            window.addEventListener('shake', shakeEventDidOccur, false);
+
+            var seconds = 20;
+
+            var countdownTimer = setInterval(secondPassed, 1000);
+
+            var two = new Two({
+                fullscreen: true,
+                autostart: false
+              }).appendTo(document.getElementById('game'));
+
+            var circle_back = two.makeCircle(two.width / 2, two.height / 2, 20);
+
+            var circle_p = two.makeCircle(-70, 0, 50);
+            var circle_b = two.makeCircle(70, 0, 50);
+            var group = two.makeGroup(circle_p, circle_b);
+            var t = 0.02, minus = -0.0002, scale = 0;
+            //var console_ = document.getElementById('console_');
+
+            //circle_p.fill = '#DF4676';
+            circle_p.fill = 'rgba(255, 0, 81, 0.8)';
+            circle_p.stroke = 'orangered';
+            circle_b.fill = 'rgba(0, 200, 255, 0.8)';
+            circle_b.stroke = '#1C75BC';
+
+            group.translation.set(two.width / 2, two.height / 2);
+            group.scale = 1;
+            //group.noStroke();
+
+            two.bind('update', function(frameCount) {
+              circle_back.fill = 'rgba(238, 246, 186, 0.86)';
+              circle_back.noStroke();
+            
+              t = (t + minus) >= 0 ? (t + minus) : 0;
+              //v = (1) * t;
+
+              //console_.innerHTML = t.toString();
+              scale += t;
+              group.rotation += t * Math.PI;
+              circle_back.scale = t * two.width / 20;
+            }).play();
+
+           //trigger shake
+           function shakeEventDidOccur () {
+              t += 0.06;
+            }
+
+            function secondPassed() {
+                var minutes = Math.round((seconds - 30)/60);
+                var remainingSeconds = seconds % 60;
+                var barget = Math.round((1 - t) * 100).toString();
+                if (remainingSeconds < 10) {
+                    remainingSeconds = "0" + remainingSeconds;  
+                }
+                document.getElementById('time_').innerHTML = minutes + ":" + remainingSeconds;
+                if (seconds == 0) {
+                    clearInterval(countdownTimer);
+                    document.getElementById('time_').innerHTML = "好的時間到!";
+                    if (barget === '100') {
+                        document.getElementById('result_').innerHTML = '沒關係，下次吧！(拍拍)';
+                    } else if (barget === '0') {
+                        document.getElementById('result_').innerHTML = '程式寫成這樣還抽得到，只能送你了！';
+                    } else {
+                        document.getElementById('result_').innerHTML = '你一定是自己人!恭喜您今次獲得' + barget + '折優惠';
+                    }
+                } else {
+                    seconds--;
+                }
+            }
+        });
+    </script>
+</div>
+</body>
+</html>
