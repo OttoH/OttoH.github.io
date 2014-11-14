@@ -10,7 +10,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <style>
         body {
-            background: #39197F;
+            /*background: #39197F;*/
         }
         
         .showText {
@@ -19,13 +19,15 @@
         }
 
         #time_ {
-            color: #c5c5c5;
+            /*color: #c5c5c5;*/
+            color: #39197F;
             margin: 0px;
         }
 
         #result_ {
-            font-size: 2.8em;
-            color: #FCFCFC;
+            font-size: 2.3em;
+            /*color: #FCFCFC;*/
+            color: #39197F;
             margin: 0px;
         }
     </style>
@@ -50,13 +52,27 @@
                 autostart: false
               }).appendTo(document.getElementById('game'));
 
-            var circle_back = two.makeCircle(two.width / 2, two.height / 2, 20);
-
             var circle_p = two.makeCircle(-70, 0, 50);
             var circle_b = two.makeCircle(70, 0, 50);
             var group = two.makeGroup(circle_p, circle_b);
             var t = 0.02, minus = -0.0002, scale = 0;
             //var console_ = document.getElementById('console_');
+
+            var rec_back_l = two.makeRectangle(0, two.height, two.width, two.height + 48);
+            //var circle_back = two.makeCircle(two.width / 2, two.height / 2, 20);
+	    rec_back_l.translation.set(0, two.height);
+            rec_back_l.fill = 'rgba(207, 192, 19, 0.24)';
+            rec_back_l.noStroke();
+
+            var rec_back_c = two.makeRectangle(0, two.height, two.width, two.height);
+	    rec_back_c.translation.set(two.width / 2, two.height * 2);
+            rec_back_c.fill = 'rgba(255, 234, 0, 0.64)';
+            rec_back_c.noStroke();
+
+            var rec_back_r = two.makeRectangle(0, two.height, two.width, two.height);
+	    rec_back_r.translation.set(two.width, two.height);
+            rec_back_r.fill = 'rgba(235, 229, 66, 0.36)';
+            rec_back_r.noStroke();
 
             //circle_p.fill = '#DF4676';
             circle_p.fill = 'rgba(255, 0, 81, 0.8)';
@@ -65,12 +81,14 @@
             circle_b.stroke = '#1C75BC';
 
             group.translation.set(two.width / 2, two.height / 2);
-            group.scale = 1;
-            //group.noStroke();
+            group.scale = 1.4;
+            group.noStroke();
 
             two.bind('update', function(frameCount) {
-              circle_back.fill = 'rgba(238, 246, 186, 0.86)';
+		/*
+              circle_back.fill = 'rgba(255, 234, 0, 0.86)';
               circle_back.noStroke();
+		*/
             
               t = (t + minus) >= 0 ? (t + minus) : 0;
               //v = (1) * t;
@@ -78,7 +96,12 @@
               //console_.innerHTML = t.toString();
               scale += t;
               group.rotation += t * Math.PI;
-              circle_back.scale = t * two.width / 20;
+             // circle_back.scale = t * two.width / 20;
+              rec_back_c.translation.set(two.width / 2,  1.5 * two.height - (t * two.height * 1.8));
+              rec_back_l.translation.set(t * two.width / 48,  1.5 * two.height - (t * two.height * 1.8));
+              rec_back_r.translation.set(two.width + t * two.width,  1.3 * two.height - (t * two.height * 1.8));
+              rec_back_l.scale = t * two.width / 64;
+              rec_back_r.scale = t * two.width / 48;
             }).play();
 
            //trigger shake
@@ -96,13 +119,13 @@
                 document.getElementById('time_').innerHTML = minutes + ":" + remainingSeconds;
                 if (seconds == 0) {
                     clearInterval(countdownTimer);
-                    document.getElementById('time_').innerHTML = "好的時間到!";
+                    document.getElementById('time_').innerHTML = "BUZZ~";
                     if (barget === '100') {
-                        document.getElementById('result_').innerHTML = '沒關係，下次吧！(拍拍)';
+                        document.getElementById('result_').innerHTML = 'OK，next time！';
                     } else if (barget === '0') {
-                        document.getElementById('result_').innerHTML = '程式寫成這樣還抽得到，只能送你了！';
+                        document.getElementById('result_').innerHTML = 'So great. Free！';
                     } else {
-                        document.getElementById('result_').innerHTML = '你一定是自己人!恭喜您今次獲得' + barget + '折優惠';
+                        document.getElementById('result_').innerHTML = 'Congratulations! you take ' + barget + ' off';
                     }
                 } else {
                     seconds--;
